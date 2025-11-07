@@ -14,13 +14,11 @@ public class main {
             System.out.println("\n===== SCHOLARSHIP APPLICATION SYSTEM =====");
             System.out.println("1. Register User");
             System.out.println("2. Login User");
-            System.out.println("3. View Users");
-            System.out.println("4. Update User");
-            System.out.println("5. Delete User");
-            System.out.println("6. Manage Scholarships");
-            System.out.println("7. Manage Evaluations");
-            System.out.println("8. Manage Applications");
-            System.out.println("9. Exit");
+            System.out.println("3. Manage Users");
+            System.out.println("4. Manage Scholarships");
+            System.out.println("5. Manage Evaluations");
+            System.out.println("6. Manage Applications");
+            System.out.println("7. Exit");
             System.out.print("Enter Action: ");
             int action = sc.nextInt();
             sc.nextLine();
@@ -28,13 +26,11 @@ public class main {
             switch (action) {
                 case 1: app.addUser(); break;
                 case 2: app.loginUser(); break;
-                case 3: app.viewUsers(); break;
-                case 4: app.viewUsers(); app.updateUser(); break;
-                case 5: app.viewUsers(); app.deleteUser(); break;
-                case 6: app.manageScholarships(); break;
-                case 7: app.manageEvaluations(); break;
-                case 8: app.manageApplications(); break;
-                case 9:
+                case 3: app.manageUsers(); break;
+                case 4: app.manageScholarships(); break;
+                case 5: app.manageEvaluations(); break;
+                case 6: app.manageApplications(); break;
+                case 7:
                     System.out.println("Thank you for using the system!");
                     System.exit(0);
                 default:
@@ -48,6 +44,33 @@ public class main {
         System.out.println("Goodbye!");
     }
 
+    // ------------------- MANAGE USERS -------------------
+    public void manageUsers() {
+        Scanner sc = new Scanner(System.in);
+        main app = new main();
+        int choice;
+
+        do {
+            System.out.println("\n===== USER MANAGEMENT =====");
+            System.out.println("1. View Users");
+            System.out.println("2. Update User");
+            System.out.println("3. Delete User");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Enter Action: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1: app.viewUsers(); break;
+                case 2: app.viewUsers(); app.updateUser(); break;
+                case 3: app.viewUsers(); app.deleteUser(); break;
+                case 4: System.out.println("Returning to Main Menu..."); break;
+                default: System.out.println("Invalid choice!");
+            }
+        } while (choice != 4);
+    }
+
+    // ------------------- ADD USER -------------------
     public void addUser() {
         Scanner sc = new Scanner(System.in);
         config conf = new config();
@@ -98,11 +121,13 @@ public class main {
         String email = sc.nextLine();
         System.out.print("Enter new Password: ");
         String password = sc.nextLine();
+        System.out.print("Enter Status: ");
+        String status = sc.nextLine();
 
-        String qry = "UPDATE tbl_user SET role = ?, first_name = ?, last_name = ?, email = ?, password = ? WHERE user_id = ?";
-        conf.updateRecord(qry, role, first_name, last_name, email, password, id);
+        String qry = "UPDATE tbl_user SET role = ?, first_name = ?, last_name = ?, email = ?, password = ?, status = ? WHERE user_id = ?";
+        conf.updateRecord(qry, role, first_name, last_name, email, password, status, id);
 
-        System.out.println("User updated successfully!");
+        System.out.println("User updated successfully! Status: " + status);
     }
 
     public void deleteUser() {
@@ -153,8 +178,8 @@ public class main {
     public void manageScholarships() {
         Scanner sc = new Scanner(System.in);
         main app = new main();
-
         int choice;
+
         do {
             System.out.println("\n===== SCHOLARSHIP MANAGEMENT =====");
             System.out.println("1. Add Scholarship");
@@ -193,7 +218,7 @@ public class main {
         String sql = "INSERT INTO tbl_Scholarship (scholarship_name, criteria, benefits, status) VALUES (?, ?, ?, ?)";
         conf.addRecord(sql, name, criteria, benefits, status);
 
-        System.out.println("Scholarship added successfully!");
+        System.out.println("✅ Scholarship added successfully!");
     }
 
     public void viewScholarships() {
@@ -238,14 +263,14 @@ public class main {
         String qry = "DELETE FROM tbl_Scholarship WHERE scholarship_id = ?";
         conf.deleteRecord(qry, id);
 
-        System.out.println("Scholarship deleted successfully!");
+        System.out.println(" Scholarship deleted successfully!");
     }
 
     public void manageEvaluations() {
         Scanner sc = new Scanner(System.in);
         main app = new main();
-
         int choice;
+
         do {
             System.out.println("\n===== EVALUATION MANAGEMENT =====");
             System.out.println("1. Add Evaluation");
@@ -320,7 +345,7 @@ public class main {
         String qry = "UPDATE tbl_Evaluation SET grades = ?, requirements_checked = ?, qualification_checked = ?, remarks = ? WHERE evaluation_id = ?";
         conf.updateRecord(qry, grades, req, qual, remarks, id);
 
-        System.out.println("Evaluation updated successfully!");
+        System.out.println(" Evaluation updated successfully!");
     }
 
     public void deleteEvaluation() {
@@ -339,8 +364,8 @@ public class main {
     public void manageApplications() {
         Scanner sc = new Scanner(System.in);
         main app = new main();
-
         int choice;
+
         do {
             System.out.println("\n===== APPLICATION MANAGEMENT =====");
             System.out.println("1. Add Application");
