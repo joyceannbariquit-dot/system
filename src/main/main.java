@@ -34,7 +34,6 @@ public class main {
         System.out.println("Goodbye!");
     }
 
-    // ----------- USER METHODS ----------------
     public void addUser() {
         System.out.print("Enter Role (Admin/Student): ");
         String role = sc.nextLine();
@@ -79,7 +78,6 @@ public class main {
         }
     }
 
-    // ----------- ADMIN MENU ----------------
     public void manageAdminMenu() {
         int choice;
         do {
@@ -103,7 +101,6 @@ public class main {
         } while (choice != 5);
     }
 
-    // ----------- STUDENT MENU ----------------
     public void manageStudentMenu() {
         int choice;
         do {
@@ -125,7 +122,6 @@ public class main {
         } while (choice != 4);
     }
 
-    // ----------- USER MANAGEMENT ----------------
     public void manageUsers() {
         int choice;
         do {
@@ -173,7 +169,6 @@ public class main {
         conf.deleteRecord(sql, id);
     }
 
-    // ----------- SCHOLARSHIP MANAGEMENT ----------------
     public void manageScholarships() {
         int choice;
         do {
@@ -231,7 +226,6 @@ public class main {
         conf.deleteRecord(sql, id);
     }
 
-    // ----------- APPLICATION MANAGEMENT ----------------
     public void manageApplications() {
         int choice;
         do {
@@ -289,7 +283,6 @@ public class main {
         conf.deleteRecord(sql, id);
     }
 
-    // ----------- EVALUATION MANAGEMENT ----------------
     public void manageEvaluations() {
         int choice;
         do {
@@ -347,18 +340,15 @@ public class main {
         conf.deleteRecord(sql, id);
     }
 
-    // ----------- STUDENT VIEW ----------------
     public void viewStudentApplications() {
-        int studentId = (Integer) loggedInUser.get("user_id");
-        String qry = "SELECT * FROM tbl_Applications WHERE student_id=" + studentId;
+        String qry = "SELECT * FROM tbl_Applications";
         String[] headers = {"ID","Student ID","Scholarship ID","Date Submitted","Requirements","Status","School Year"};
         String[] cols = {"app_id","student_id","scholarship_id","date_submitted","requirements","status","school_year"};
         conf.viewRecords(qry, headers, cols);
     }
 
     public void viewStudentEvaluations() {
-        int studentId = (Integer) loggedInUser.get("user_id");
-        String qry = "SELECT e.* FROM tbl_Evaluation e INNER JOIN tbl_Applications a ON e.application_id=a.app_id WHERE a.student_id=" + studentId;
+        String qry = "SELECT * FROM tbl_Evaluation";
         String[] headers = {"ID","Application ID","Grades","Requirements Checked","Qualification Checked","Remarks"};
         String[] cols = {"evaluation_id","application_id","grades","requirements_checked","qualification_checked","remarks"};
         conf.viewRecords(qry, headers, cols);
