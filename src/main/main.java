@@ -35,18 +35,41 @@ public class main {
     }
 
     public void addUser() {
-        System.out.print("Enter Role (Admin/Student): ");
-        String role = sc.nextLine();
-        System.out.print("Enter First Name: ");
-        String first_name = sc.nextLine();
-        System.out.print("Enter Last Name: ");
-        String last_name = sc.nextLine();
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
-        System.out.print("Enter Password: ");
-        String password = sc.nextLine();
-        System.out.print("Enter Status: ");
-        String status = sc.nextLine();
+        String role;
+        do {
+            System.out.print("Enter Role (Admin/Student): ");
+            role = sc.nextLine();
+        } while (!role.equalsIgnoreCase("Admin") && !role.equalsIgnoreCase("Student"));
+
+        String first_name;
+        do {
+            System.out.print("Enter First Name: ");
+            first_name = sc.nextLine();
+        } while (first_name.isEmpty());
+
+        String last_name;
+        do {
+            System.out.print("Enter Last Name: ");
+            last_name = sc.nextLine();
+        } while (last_name.isEmpty());
+
+        String email;
+        do {
+            System.out.print("Enter Email: ");
+            email = sc.nextLine();
+        } while (!isValidEmail(email));
+
+        String password;
+        do {
+            System.out.print("Enter Password: ");
+            password = sc.nextLine();
+        } while (password.length() < 6);
+
+        String status;
+        do {
+            System.out.print("Enter Status: ");
+            status = sc.nextLine();
+        } while (status.isEmpty());
 
         String sql = "INSERT INTO tbl_user (role, first_name, last_name, email, password, status) VALUES (?, ?, ?, ?, ?, ?)";
         conf.addRecord(sql, role, first_name, last_name, email, password, status);
@@ -152,12 +175,36 @@ public class main {
 
     public void updateUser() {
         System.out.print("Enter User ID to update: "); int id = sc.nextInt(); sc.nextLine();
-        System.out.print("Enter new Role: "); String role = sc.nextLine();
-        System.out.print("Enter new First Name: "); String first_name = sc.nextLine();
-        System.out.print("Enter new Last Name: "); String last_name = sc.nextLine();
-        System.out.print("Enter new Email: "); String email = sc.nextLine();
-        System.out.print("Enter new Password: "); String password = sc.nextLine();
-        System.out.print("Enter new Status: "); String status = sc.nextLine();
+
+        String role;
+        do {
+            System.out.print("Enter new Role (Admin/Student): "); role = sc.nextLine();
+        } while (!role.equalsIgnoreCase("Admin") && !role.equalsIgnoreCase("Student"));
+
+        String first_name;
+        do {
+            System.out.print("Enter new First Name: "); first_name = sc.nextLine();
+        } while (first_name.isEmpty());
+
+        String last_name;
+        do {
+            System.out.print("Enter new Last Name: "); last_name = sc.nextLine();
+        } while (last_name.isEmpty());
+
+        String email;
+        do {
+            System.out.print("Enter new Email: "); email = sc.nextLine();
+        } while (!isValidEmail(email));
+
+        String password;
+        do {
+            System.out.print("Enter new Password (min 6 chars): "); password = sc.nextLine();
+        } while (password.length() < 6);
+
+        String status;
+        do {
+            System.out.print("Enter new Status: "); status = sc.nextLine();
+        } while (status.isEmpty());
 
         String sql = "UPDATE tbl_user SET role=?, first_name=?, last_name=?, email=?, password=?, status=? WHERE user_id=?";
         conf.updateRecord(sql, role, first_name, last_name, email, password, status, id);
@@ -193,10 +240,22 @@ public class main {
     }
 
     public void addScholarship() {
-        System.out.print("Enter Scholarship Name: "); String name = sc.nextLine();
-        System.out.print("Enter Criteria: "); String criteria = sc.nextLine();
-        System.out.print("Enter Benefits: "); String benefits = sc.nextLine();
-        System.out.print("Enter Status: "); String status = sc.nextLine();
+        String name, criteria, benefits, status;
+        do {
+            System.out.print("Enter Scholarship Name: "); name = sc.nextLine();
+        } while (name.isEmpty());
+
+        do {
+            System.out.print("Enter Criteria: "); criteria = sc.nextLine();
+        } while (criteria.isEmpty());
+
+        do {
+            System.out.print("Enter Benefits: "); benefits = sc.nextLine();
+        } while (benefits.isEmpty());
+
+        do {
+            System.out.print("Enter Status: "); status = sc.nextLine();
+        } while (status.isEmpty());
 
         String sql = "INSERT INTO tbl_Scholarship (scholarship_name, criteria, benefits, status) VALUES (?, ?, ?, ?)";
         conf.addRecord(sql, name, criteria, benefits, status);
@@ -211,10 +270,23 @@ public class main {
 
     public void updateScholarship() {
         System.out.print("Enter Scholarship ID to update: "); int id = sc.nextInt(); sc.nextLine();
-        System.out.print("Enter new Name: "); String name = sc.nextLine();
-        System.out.print("Enter new Criteria: "); String criteria = sc.nextLine();
-        System.out.print("Enter new Benefits: "); String benefits = sc.nextLine();
-        System.out.print("Enter new Status: "); String status = sc.nextLine();
+
+        String name, criteria, benefits, status;
+        do {
+            System.out.print("Enter new Name: "); name = sc.nextLine();
+        } while (name.isEmpty());
+
+        do {
+            System.out.print("Enter new Criteria: "); criteria = sc.nextLine();
+        } while (criteria.isEmpty());
+
+        do {
+            System.out.print("Enter new Benefits: "); benefits = sc.nextLine();
+        } while (benefits.isEmpty());
+
+        do {
+            System.out.print("Enter new Status: "); status = sc.nextLine();
+        } while (status.isEmpty());
 
         String sql = "UPDATE tbl_Scholarship SET scholarship_name=?, criteria=?, benefits=?, status=? WHERE scholarship_id=?";
         conf.updateRecord(sql, name, criteria, benefits, status, id);
@@ -251,7 +323,13 @@ public class main {
     public void addApplication() {
         System.out.print("Enter Student ID: "); int student_id = sc.nextInt(); sc.nextLine();
         System.out.print("Enter Scholarship ID: "); int scholarship_id = sc.nextInt(); sc.nextLine();
-        System.out.print("Enter Date Submitted (YYYY-MM-DD): "); String date_submitted = sc.nextLine();
+
+        String date_submitted;
+        do {
+            System.out.print("Enter Date Submitted (YYYY-MM-DD): ");
+            date_submitted = sc.nextLine();
+        } while (!isValidDate(date_submitted));
+
         System.out.print("Enter Requirements: "); String requirements = sc.nextLine();
         System.out.print("Enter Status: "); String status = sc.nextLine();
         System.out.print("Enter School Year: "); int school_year = sc.nextInt(); sc.nextLine();
@@ -269,6 +347,7 @@ public class main {
 
     public void updateApplication() {
         System.out.print("Enter Application ID to update: "); int id = sc.nextInt(); sc.nextLine();
+
         System.out.print("Enter new Requirements: "); String req = sc.nextLine();
         System.out.print("Enter new Status: "); String status = sc.nextLine();
         System.out.print("Enter new School Year: "); int sy = sc.nextInt(); sc.nextLine();
@@ -352,5 +431,27 @@ public class main {
         String[] headers = {"ID","Application ID","Grades","Requirements Checked","Qualification Checked","Remarks"};
         String[] cols = {"evaluation_id","application_id","grades","requirements_checked","qualification_checked","remarks"};
         conf.viewRecords(qry, headers, cols);
+    }
+
+   
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[\\w-\\.]+@[\\w-]+\\.[a-z]{2,}$";
+        return email.matches(emailRegex);
+    }
+
+    public boolean isValidDate(String date) {
+        String dateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
+        if (!date.matches(dateRegex)) return false;
+        try {
+            String[] parts = date.split("-");
+            int year = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            int day = Integer.parseInt(parts[2]);
+            if (month < 1 || month > 12) return false;
+            if (day < 1 || day > 31) return false;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
