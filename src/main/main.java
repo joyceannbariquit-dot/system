@@ -34,6 +34,7 @@ public class main {
         System.out.println("Goodbye!");
     }
 
+    // ------------------- USER -------------------
     public void addUser() {
         String role;
         do {
@@ -61,7 +62,7 @@ public class main {
 
         String password;
         do {
-            System.out.print("Enter Password: ");
+            System.out.print("Enter Password (min 6 chars): ");
             password = sc.nextLine();
         } while (password.length() < 6);
 
@@ -71,8 +72,10 @@ public class main {
             status = sc.nextLine();
         } while (status.isEmpty());
 
+        String hashedPassword = config.hashPassword(password);
+
         String sql = "INSERT INTO tbl_user (role, first_name, last_name, email, password, status) VALUES (?, ?, ?, ?, ?, ?)";
-        conf.addRecord(sql, role, first_name, last_name, email, password, status);
+        conf.addRecord(sql, role, first_name, last_name, email, hashedPassword, status);
 
         System.out.println("User registered successfully!");
     }
@@ -83,8 +86,9 @@ public class main {
         System.out.print("Enter Password: ");
         String pass = sc.nextLine();
 
+        String hashedPass = config.hashPassword(pass);
         String sql = "SELECT * FROM tbl_user WHERE email = ? AND password = ?";
-        var result = conf.fetchRecords(sql, email, pass);
+        var result = conf.fetchRecords(sql, email, hashedPass);
 
         if (!result.isEmpty()) {
             loggedInUser = result.get(0);
@@ -101,6 +105,7 @@ public class main {
         }
     }
 
+    // ------------------- ADMIN MENU -------------------
     public void manageAdminMenu() {
         int choice;
         do {
@@ -124,6 +129,7 @@ public class main {
         } while (choice != 5);
     }
 
+    // ------------------- STUDENT MENU -------------------
     public void manageStudentMenu() {
         int choice;
         do {
@@ -145,6 +151,7 @@ public class main {
         } while (choice != 4);
     }
 
+    // ------------------- USER MANAGEMENT -------------------
     public void manageUsers() {
         int choice;
         do {
@@ -176,46 +183,57 @@ public class main {
     public void updateUser() {
         System.out.print("Enter User ID to update: "); int id = sc.nextInt(); sc.nextLine();
 
+        // Check if exists
+        String sqlCheck = "SELECT * FROM tbl_user WHERE user_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("User ID not found! Update cancelled.");
+            return;
+        }
+
         String role;
-        do {
-            System.out.print("Enter new Role (Admin/Student): "); role = sc.nextLine();
-        } while (!role.equalsIgnoreCase("Admin") && !role.equalsIgnoreCase("Student"));
+        do { System.out.print("Enter new Role (Admin/Student): "); role = sc.nextLine(); } 
+        while (!role.equalsIgnoreCase("Admin") && !role.equalsIgnoreCase("Student"));
 
         String first_name;
-        do {
-            System.out.print("Enter new First Name: "); first_name = sc.nextLine();
-        } while (first_name.isEmpty());
+        do { System.out.print("Enter new First Name: "); first_name = sc.nextLine(); } while (first_name.isEmpty());
 
         String last_name;
-        do {
-            System.out.print("Enter new Last Name: "); last_name = sc.nextLine();
-        } while (last_name.isEmpty());
+        do { System.out.print("Enter new Last Name: "); last_name = sc.nextLine(); } while (last_name.isEmpty());
 
         String email;
-        do {
-            System.out.print("Enter new Email: "); email = sc.nextLine();
-        } while (!isValidEmail(email));
+        do { System.out.print("Enter new Email: "); email = sc.nextLine(); } while (!isValidEmail(email));
 
         String password;
-        do {
-            System.out.print("Enter new Password (min 6 chars): "); password = sc.nextLine();
-        } while (password.length() < 6);
+        do { System.out.print("Enter new Password (min 6 chars): "); password = sc.nextLine(); } while (password.length() < 6);
 
         String status;
-        do {
-            System.out.print("Enter new Status: "); status = sc.nextLine();
-        } while (status.isEmpty());
+        do { System.out.print("Enter new Status: "); status = sc.nextLine(); } while (status.isEmpty());
 
+        String hashedPassword = config.hashPassword(password);
         String sql = "UPDATE tbl_user SET role=?, first_name=?, last_name=?, email=?, password=?, status=? WHERE user_id=?";
-        conf.updateRecord(sql, role, first_name, last_name, email, password, status, id);
+        conf.updateRecord(sql, role, first_name, last_name, email, hashedPassword, status, id);
+
+        System.out.println("User updated successfully!");
     }
 
     public void deleteUser() {
         System.out.print("Enter User ID to delete: "); int id = sc.nextInt(); sc.nextLine();
+
+        // Check if exists
+        String sqlCheck = "SELECT * FROM tbl_user WHERE user_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("User ID not found! Delete cancelled.");
+            return;
+        }
+
         String sql = "DELETE FROM tbl_user WHERE user_id=?";
         conf.deleteRecord(sql, id);
+        System.out.println("User deleted successfully!");
     }
 
+    // ------------------- SCHOLARSHIP MANAGEMENT -------------------
     public void manageScholarships() {
         int choice;
         do {
@@ -241,21 +259,10 @@ public class main {
 
     public void addScholarship() {
         String name, criteria, benefits, status;
-        do {
-            System.out.print("Enter Scholarship Name: "); name = sc.nextLine();
-        } while (name.isEmpty());
-
-        do {
-            System.out.print("Enter Criteria: "); criteria = sc.nextLine();
-        } while (criteria.isEmpty());
-
-        do {
-            System.out.print("Enter Benefits: "); benefits = sc.nextLine();
-        } while (benefits.isEmpty());
-
-        do {
-            System.out.print("Enter Status: "); status = sc.nextLine();
-        } while (status.isEmpty());
+        do { System.out.print("Enter Scholarship Name: "); name = sc.nextLine(); } while (name.isEmpty());
+        do { System.out.print("Enter Criteria: "); criteria = sc.nextLine(); } while (criteria.isEmpty());
+        do { System.out.print("Enter Benefits: "); benefits = sc.nextLine(); } while (benefits.isEmpty());
+        do { System.out.print("Enter Status: "); status = sc.nextLine(); } while (status.isEmpty());
 
         String sql = "INSERT INTO tbl_Scholarship (scholarship_name, criteria, benefits, status) VALUES (?, ?, ?, ?)";
         conf.addRecord(sql, name, criteria, benefits, status);
@@ -271,33 +278,40 @@ public class main {
     public void updateScholarship() {
         System.out.print("Enter Scholarship ID to update: "); int id = sc.nextInt(); sc.nextLine();
 
+        String sqlCheck = "SELECT * FROM tbl_Scholarship WHERE scholarship_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Scholarship ID not found! Update cancelled.");
+            return;
+        }
+
         String name, criteria, benefits, status;
-        do {
-            System.out.print("Enter new Name: "); name = sc.nextLine();
-        } while (name.isEmpty());
-
-        do {
-            System.out.print("Enter new Criteria: "); criteria = sc.nextLine();
-        } while (criteria.isEmpty());
-
-        do {
-            System.out.print("Enter new Benefits: "); benefits = sc.nextLine();
-        } while (benefits.isEmpty());
-
-        do {
-            System.out.print("Enter new Status: "); status = sc.nextLine();
-        } while (status.isEmpty());
+        do { System.out.print("Enter new Name: "); name = sc.nextLine(); } while (name.isEmpty());
+        do { System.out.print("Enter new Criteria: "); criteria = sc.nextLine(); } while (criteria.isEmpty());
+        do { System.out.print("Enter new Benefits: "); benefits = sc.nextLine(); } while (benefits.isEmpty());
+        do { System.out.print("Enter new Status: "); status = sc.nextLine(); } while (status.isEmpty());
 
         String sql = "UPDATE tbl_Scholarship SET scholarship_name=?, criteria=?, benefits=?, status=? WHERE scholarship_id=?";
         conf.updateRecord(sql, name, criteria, benefits, status, id);
+        System.out.println("Scholarship updated successfully!");
     }
 
     public void deleteScholarship() {
         System.out.print("Enter Scholarship ID to delete: "); int id = sc.nextInt(); sc.nextLine();
+
+        String sqlCheck = "SELECT * FROM tbl_Scholarship WHERE scholarship_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Scholarship ID not found! Delete cancelled.");
+            return;
+        }
+
         String sql = "DELETE FROM tbl_Scholarship WHERE scholarship_id=?";
         conf.deleteRecord(sql, id);
+        System.out.println("Scholarship deleted successfully!");
     }
 
+    // ------------------- APPLICATION MANAGEMENT -------------------
     public void manageApplications() {
         int choice;
         do {
@@ -321,7 +335,7 @@ public class main {
     }
 
     public void addApplication() {
-        System.out.print("Enter Student ID: "); int student_id = sc.nextInt(); sc.nextLine();
+        int student_id = (int) loggedInUser.get("user_id"); // auto set if student
         System.out.print("Enter Scholarship ID: "); int scholarship_id = sc.nextInt(); sc.nextLine();
 
         String date_submitted;
@@ -336,6 +350,7 @@ public class main {
 
         String sql = "INSERT INTO tbl_Applications (student_id, scholarship_id, date_submitted, requirements, status, school_year) VALUES (?, ?, ?, ?, ?, ?)";
         conf.addRecord(sql, student_id, scholarship_id, date_submitted, requirements, status, school_year);
+        System.out.println("Application added successfully!");
     }
 
     public void viewApplications() {
@@ -348,20 +363,38 @@ public class main {
     public void updateApplication() {
         System.out.print("Enter Application ID to update: "); int id = sc.nextInt(); sc.nextLine();
 
+        String sqlCheck = "SELECT * FROM tbl_Applications WHERE app_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Application ID not found! Update cancelled.");
+            return;
+        }
+
         System.out.print("Enter new Requirements: "); String req = sc.nextLine();
         System.out.print("Enter new Status: "); String status = sc.nextLine();
         System.out.print("Enter new School Year: "); int sy = sc.nextInt(); sc.nextLine();
 
         String sql = "UPDATE tbl_Applications SET requirements=?, status=?, school_year=? WHERE app_id=?";
         conf.updateRecord(sql, req, status, sy, id);
+        System.out.println("Application updated successfully!");
     }
 
     public void deleteApplication() {
         System.out.print("Enter Application ID to delete: "); int id = sc.nextInt(); sc.nextLine();
+
+        String sqlCheck = "SELECT * FROM tbl_Applications WHERE app_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Application ID not found! Delete cancelled.");
+            return;
+        }
+
         String sql = "DELETE FROM tbl_Applications WHERE app_id=?";
         conf.deleteRecord(sql, id);
+        System.out.println("Application deleted successfully!");
     }
 
+    // ------------------- EVALUATION MANAGEMENT -------------------
     public void manageEvaluations() {
         int choice;
         do {
@@ -393,6 +426,7 @@ public class main {
 
         String sql = "INSERT INTO tbl_Evaluation (application_id, grades, requirements_checked, qualification_checked, remarks) VALUES (?, ?, ?, ?, ?)";
         conf.addRecord(sql, app_id, grades, req, qual, remarks);
+        System.out.println("Evaluation added successfully!");
     }
 
     public void viewEvaluations() {
@@ -404,6 +438,14 @@ public class main {
 
     public void updateEvaluation() {
         System.out.print("Enter Evaluation ID to update: "); int id = sc.nextInt(); sc.nextLine();
+
+        String sqlCheck = "SELECT * FROM tbl_Evaluation WHERE evaluation_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Evaluation ID not found! Update cancelled.");
+            return;
+        }
+
         System.out.print("Enter new Grades: "); int grades = sc.nextInt(); sc.nextLine();
         System.out.print("Enter new Requirements Checked: "); String req = sc.nextLine();
         System.out.print("Enter new Qualification Checked: "); String qual = sc.nextLine();
@@ -411,47 +453,46 @@ public class main {
 
         String sql = "UPDATE tbl_Evaluation SET grades=?, requirements_checked=?, qualification_checked=?, remarks=? WHERE evaluation_id=?";
         conf.updateRecord(sql, grades, req, qual, remarks, id);
+        System.out.println("Evaluation updated successfully!");
     }
 
     public void deleteEvaluation() {
         System.out.print("Enter Evaluation ID to delete: "); int id = sc.nextInt(); sc.nextLine();
+
+        String sqlCheck = "SELECT * FROM tbl_Evaluation WHERE evaluation_id=?";
+        var res = conf.fetchRecords(sqlCheck, id);
+        if (res.isEmpty()) {
+            System.out.println("Evaluation ID not found! Delete cancelled.");
+            return;
+        }
+
         String sql = "DELETE FROM tbl_Evaluation WHERE evaluation_id=?";
         conf.deleteRecord(sql, id);
+        System.out.println("Evaluation deleted successfully!");
     }
 
-    public void viewStudentApplications() {
-        String qry = "SELECT * FROM tbl_Applications";
-        String[] headers = {"ID","Student ID","Scholarship ID","Date Submitted","Requirements","Status","School Year"};
-        String[] cols = {"app_id","student_id","scholarship_id","date_submitted","requirements","status","school_year"};
-        conf.viewRecords(qry, headers, cols);
+    // ------------------- STUDENT VIEW -------------------
+public void viewStudentApplications() {
+    String qry = "SELECT * FROM tbl_Applications";
+    String[] headers = {"ID","Student ID","Scholarship ID","Date Submitted","Requirements","Status","School Year"};
+    String[] cols = {"app_id","student_id","scholarship_id","date_submitted","requirements","status","school_year"};
+    conf.viewRecords(qry, headers, cols);
+}
+
+public void viewStudentEvaluations() {
+    String qry = "SELECT * FROM tbl_Evaluation";
+    String[] headers = {"ID","Application ID","Grades","Requirements Checked","Qualification Checked","Remarks"};
+    String[] cols = {"evaluation_id","application_id","grades","requirements_checked","qualification_checked","remarks"};
+    conf.viewRecords(qry, headers, cols);
+}
+
+
+    // ------------------- VALIDATIONS -------------------
+    private boolean isValidEmail(String email) {
+        return email.contains("@") && email.contains(".");
     }
 
-    public void viewStudentEvaluations() {
-        String qry = "SELECT * FROM tbl_Evaluation";
-        String[] headers = {"ID","Application ID","Grades","Requirements Checked","Qualification Checked","Remarks"};
-        String[] cols = {"evaluation_id","application_id","grades","requirements_checked","qualification_checked","remarks"};
-        conf.viewRecords(qry, headers, cols);
-    }
-
-   
-    public boolean isValidEmail(String email) {
-        String emailRegex = "^[\\w-\\.]+@[\\w-]+\\.[a-z]{2,}$";
-        return email.matches(emailRegex);
-    }
-
-    public boolean isValidDate(String date) {
-        String dateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
-        if (!date.matches(dateRegex)) return false;
-        try {
-            String[] parts = date.split("-");
-            int year = Integer.parseInt(parts[0]);
-            int month = Integer.parseInt(parts[1]);
-            int day = Integer.parseInt(parts[2]);
-            if (month < 1 || month > 12) return false;
-            if (day < 1 || day > 31) return false;
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    private boolean isValidDate(String date) {
+        return date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 }
