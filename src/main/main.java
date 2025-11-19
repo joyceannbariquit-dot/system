@@ -34,7 +34,6 @@ public class main {
         System.out.println("Goodbye!");
     }
 
-    // ------------------- USER -------------------
     public void addUser() {
         String role;
         do {
@@ -105,7 +104,6 @@ public class main {
         }
     }
 
-    // ------------------- ADMIN MENU -------------------
     public void manageAdminMenu() {
         int choice;
         do {
@@ -129,7 +127,6 @@ public class main {
         } while (choice != 5);
     }
 
-    // ------------------- STUDENT MENU -------------------
     public void manageStudentMenu() {
         int choice;
         do {
@@ -150,8 +147,6 @@ public class main {
             }
         } while (choice != 4);
     }
-
-    // ------------------- USER MANAGEMENT -------------------
     public void manageUsers() {
         int choice;
         do {
@@ -233,7 +228,6 @@ public class main {
         System.out.println("User deleted successfully!");
     }
 
-    // ------------------- SCHOLARSHIP MANAGEMENT -------------------
     public void manageScholarships() {
         int choice;
         do {
@@ -311,7 +305,6 @@ public class main {
         System.out.println("Scholarship deleted successfully!");
     }
 
-    // ------------------- APPLICATION MANAGEMENT -------------------
     public void manageApplications() {
         int choice;
         do {
@@ -393,8 +386,6 @@ public class main {
         conf.deleteRecord(sql, id);
         System.out.println("Application deleted successfully!");
     }
-
-    // ------------------- EVALUATION MANAGEMENT -------------------
     public void manageEvaluations() {
         int choice;
         do {
@@ -471,7 +462,6 @@ public class main {
         System.out.println("Evaluation deleted successfully!");
     }
 
-    // ------------------- STUDENT VIEW -------------------
 public void viewStudentApplications() {
     String qry = "SELECT * FROM tbl_Applications";
     String[] headers = {"ID","Student ID","Scholarship ID","Date Submitted","Requirements","Status","School Year"};
@@ -487,7 +477,6 @@ public void viewStudentEvaluations() {
 }
 
 
-    // ------------------- VALIDATIONS -------------------
     private boolean isValidEmail(String email) {
         return email.contains("@") && email.contains(".");
     }
